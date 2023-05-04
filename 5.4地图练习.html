@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="initial-scale=1.0, user-scalable=no, width=device-width"
+    />
+    <script src="https://webapi.amap.com/maps?v=2.0&key=2fdee6013948aaa7f0563d80cbf84ede"></script>
+    <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
+    <script src="https://a.amap.com/jsapi_demos/static/demo-center/js/demoutils.js"></script>
+    <title>第一题</title>
+    <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css"/>
+       
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+      }
+      #container {
+        width: 700px;
+        height: 680px;
+      }
+      #panel {
+            position: fixed;
+            background-color: white;
+            max-height: 90%;
+            overflow-y: auto;
+            top: 10px;
+            right: 10px;
+            width: 280px;
+        }
+        #panel .amap-call {
+            background-color: #009cf9;
+            border-top-left-radius: 4px;
+   	        border-top-right-radius: 4px;
+        }
+        #panel .amap-lib-driving {
+	        border-bottom-left-radius: 4px;
+   	        border-bottom-right-radius: 4px;
+            overflow: hidden;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="container"></div>
+    <button onclick="show()">出现</button>
+    <button onclick="hide()">隐藏</button>
+    <script type="text/javascript">
+      var AMap;
+      window._AMapSecurityConfig = {
+        securityJsCode: "9df889ea1b601e79fe17fd8057a6e804",
+      };
+    </script>
+    <script src="https://webapi.amap.com/loader.js"></script>
+    <script type="text/javascript">
+      //   AMapLoader.load({
+      //     key: "2fdee6013948aaa7f0563d80cbf84ede", // 申请好的Web端开发者Key，首次调用 load 时必填
+      //     version: "2.0", // 指定要加载的 JSAPI 的版本，缺省时默认为 1.4.15
+      //   });
+      const layer = new AMap.createDefaultLayer({
+        // 提示：参数值并不是API默认使用的值
+        zooms: [3, 20], //可见级别
+        visible: true, //是否可见
+        opacity: 1, //透明度
+        zIndex: 0, //叠加层级
+      });
+     
+      const map = new AMap.Map("container", {
+        viewMode: "3D", // 默认使用 2D 模式
+        zoom: 17, //初始化地图层级
+        center: [113.428321,34.774289], //初始化地图中心点
+        layers: [layer],
+      });
+       const traffic = new AMap.TileLayer.Traffic({
+        autoRefresh: true, //是否自动刷新，默认为false
+        interval: 180, //刷新间隔，默认180s
+      });
+      map.add(traffic);
+    //   const points = [
+    //     { keyword: "荥阳市吾悦广场", city: "郑州" },
+    //     { keyword: "荥阳市奥特科创", city: "郑州" },
+    //   ];
+
+      //       driving.search(points, function(status, result) {
+      //   if (status === 'complete') {
+      //     log.success('绘制驾车路线完成')
+      //   } else {
+      //     log.error('获取驾车数据失败：' + result)
+      //   }
+      // });
+      
+      function show() {
+        traffic.show(); //显示路况图层
+ //隐
+      }
+      function hide() {
+        traffic.hide();
+      }
+      var text = new AMap.Text({
+        text:'荥阳吾悦广场',
+        anchor:'center', // 设置文本标记锚点
+        draggable:true,
+        cursor:'pointer',
+        angle:10,
+        style:{
+            'padding': '.75rem 1.25rem',
+            'margin-bottom': '1rem',
+            'border-radius': '.25rem',
+            'background-color': 'white',
+            'width': '15rem',
+            'border-width': 0,
+            'box-shadow': '0 2px 6px 0 rgba(114, 124, 245, .5)',
+            'text-align': 'center',
+            'font-size': '20px',
+            'color': 'blue'
+        },
+        position: [113.428321,34.774289]
+    });
+
+    text.setMap(map);
+    </script>
+  </body>
+</html>
