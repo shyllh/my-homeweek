@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js"></script>
+    <title>Document</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            text-align: center;
+        }
+
+        #btn {
+            width: 100px;
+            height: 40px;
+            margin: 10px;
+            border: none;
+            background-color: aquamarine;
+            border-radius: 10px;
+        }
+
+        button {
+            padding: 5px;
+            border: none;
+            margin: 10px;
+            background-color: aquamarine;
+            border-radius: 5px;
+        }
+
+        thead {
+            background-color: #e8e8e8;
+        }
+
+        tbody button {
+            height: 30px;
+            border: none;
+            background-color: aquamarine;
+            border-radius: 5px;
+        }
+
+        tr {
+            height: 40px;
+        }
+
+        #Look {
+            width: 800px;
+            height: 500px;
+            border: 1px solid aqua;
+            position: absolute;
+            top: 50%;
+            border-radius: 15px;
+            margin-top: -200px;
+            margin-left: 200px;
+            display: none;
+            background-color: rgb(220, 237, 159);
+            padding: 15px;
+        }
+
+        form {
+        width: 500px;
+        height: 600px;
+        background-color: pink;
+        text-align: center;
+        padding-top: 10px;
+        margin: auto;
+        display: none;
+        position: absolute;
+        top: 100px;
+        left: 35%;
+      }
+        form button {
+            background-color: gainsboro;
+        }
+
+        #Look1 {
+            margin-left: auto;
+            margin-top: auto;
+        }
+
+        #main {
+            margin: 30px auto;
+            width: 800px;
+            height: 400px;
+            border: 1px solid #665b5b;
+        }
+        .btn{
+            float:left;
+            margin-left: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <button id="btn" onclick=btn()>添加学生</button>
+    搜索：<input type="text" name="suo" id="suo">
+    <button onclick='souBtn()'>搜索</button>
+    <div id="Look">
+        <div id="Look1"></div>
+        <div id="main"></div>
+        <button onclick="guan()" style="background-color: #e8e8e8">关闭</button>
+    </div>
+    <form name="form">
+        <h2 id="h2">添加学生</h2>
+        姓名：<input type="text" name="name" id="name" /><br /><br />
+        第一次机试：<input type="text" name="test" id="test" /><br /><br />
+        第一次笔试：<input type="text" name="write" id="write" /><br /><br />
+        第二次机试：<input type="text" name="test1" id="test1" /><br /><br />
+        第一次平均分：<input type="text" name="aver" id="aver" /><br /><br />
+        第三次机试：<input type="text" name="test2" id="test2" /><br /><br />
+        第二次笔试：<input type="text" name="write1" id="write1" /><br /><br />
+        第四次机试：<input type="text" name="test3" id="test3" /><br /><br />
+        第二次平均分：<input type="text" name="aver1" id="aver1" /><br /><br />
+        总平均分：<input type="text" name="zAver" id="zAver" /><br /><br />
+        <button onclick="queding()" id="save-btn" class="btn">提交</button>
+        <button onclick="xiugai()" style="display: none;" id="xiu" class="btn">修改 </button>
+        <button onclick="quxiao()" id="qu-btn" style="float:left;">取消</button>
+    </form>
+    <table border="1">
+        <thead>
+          <tr>
+            <td rowspan="2">
+              <input type="checkbox" name="check" id="check" />
+            </td>
+            <td rowspan="2">姓名</td>
+            <td>3.31(星期五)</td>
+            <td colspan="3">4.7(星期五)</td>
+            <td>4.14(星期五)</td>
+            <td colspan="3">4.21(星期五)</td>
+            <td rowspan="2">教学周期平均分</td>
+            <td rowspan="2">操作</td>
+          </tr>
+          <tr>
+            <td>机试成绩</td>
+            <td>笔试成绩</td>
+            <td>机试成绩</td>
+            <td>平均分</td>
+            <td>机试成绩</td>
+            <td>笔试成绩</td>
+            <td>机试成绩</td>
+            <td>平均分</td>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    <script>
+
+const arr = [
+        {
+          name: "陈静",
+          test: 60,
+          write: 85,
+          test1: 35,
+          aver: 60,
+          test2: 65,
+          write1: 65,
+          test3: 75,
+          aver1: 70,
+          zAver: 64.375,
+        },
+        {
+          name: "李泽",
+          test: 90,
+          write: 38,
+          test1: 100,
+          aver: 69,
+          test2: 70,
+          write1: 50,
+          test3: 92,
+          aver1: 71,
+          zAver: 73.625,
+        },
+        {
+          name: "赵灿龙",
+          test: 90,
+          write: 51,
+          test1: 70,
+          aver: 60.5,
+          test2: 65,
+          write1: 29,
+          test3: 50,
+          aver1: 39.5,
+          zAver: 56.875,
+        },
+        {
+          name: "刘佳佳",
+          test: 75,
+          write: 45,
+          test1: 70,
+          aver: 57.5,
+          test2: 70,
+          write1: 60,
+          test3: 50,
+          aver1: 55,
+          zAver: 60.3125,
+        },
+        {
+          name: "齐博超",
+          test: 75,
+          write: 45,
+          test1: 70,
+          aver: 57.5,
+          test2: 70,
+          write1: 60,
+          test3: 50,
+          aver1: 55,
+          zAver: 60.3125,
+        },
+      ];
+        var addORupdate = 1
+        $(function () {
+            showList()
+            if (addORupdate == 1) {
+                saveBtn.addEventListener('click', function () {
+                    event.preventDefault()
+                    if (addORupdate == 1) {
+                        addCar()
+                    } else {
+                        queding()
+                    }
+                    showCarlist()
+                    offBtnFun()
+                })
+            }
+        });
+        const h2title = document.querySelector("h2");
+        const saveBtn = document.querySelector("#save-btn")
+        //删除
+        $("table").on("click", "#remo", function () {
+            event.preventDefault();
+            if (confirm('确定删除吗？')) {
+                $(this).parent("td").parent("tr").remove();
+            }
+        });
+        //取消
+        function quxiao() {
+            event.preventDefault();
+            $('form').css('display', 'none')
+            $("#name").val('')
+            $("#test").val('')
+            $("#write").val('')
+            $("#test1").val('')
+            $("#test2").val('')
+            $("#write1").val('')
+            $("#test3").val('')
+        }
+        //查看
+        function look() {
+            event.preventDefault();
+            $('#Look').css('display', 'block')
+            index = event.target.dataset.index;
+            studentIndex = index;
+            fun(studentIndex)
+
+        }
+        //编辑
+        var i
+        function edit(index) {
+            i = index
+            $('form').css('display', 'block')
+            $('#save-btn').css('display','none')
+            $("#xiu").css('display','block')
+            h2title.innerHTML = "修改";
+            const carform = document.getElementsByName("form")[0]
+            console.log(index);
+            carform.name.value = arr[index].name;
+            carform.test.value = arr[index].test;
+            carform.write.value = arr[index].write;
+            carform.test1.value = arr[index].test1;
+            carform.aver.value = arr[index].aver;
+            carform.test2.value = arr[index].test2;
+            carform.write1.value = arr[index].write1;
+            carform.test3.value = arr[index].test3;
+            carform.aver1.value = arr[index].aver1;
+            carform.zAver.value = arr[index].zAver;
+        }
+
+        function xiugai(){
+            event.preventDefault();
+            arr[i].name=$("#name").val()
+            arr[i].test=$("#test").val()
+            arr[i].write=$("#write").val()
+            arr[i].test1=$("#test1").val()
+            arr[i].aver=$("#aver").val()
+            arr[i].test2=$("#test2").val()
+            arr[i].write1=$("#write1").val()
+            arr[i].test3=$("#test3").val()
+            arr[i].aver1=$("#aver1").val()
+            arr[i].zAver=$("#zAver").val()
+            showList()
+            $('form').css('display', 'none')
+        }
+        function addCar() {
+            let data = {}
+            console.log();
+            const carform = document.getElementsByName("form")[0]
+            data.name = carform.name.value
+            data.test = carform.test.value;
+            data.write = carform.write.value;
+            data.test1 = carform.test1.value;
+            data.aver=carform.aver.value
+            data.test2 = carform.test2.value;
+            data.write1 = carform.write1.value;
+            data.test3 = carform.test3.value;
+            data.aver1=carform.aver1.value
+            data.zAver=carform.zAver.value
+            arr.unshift(data);
+            console.log(data);
+            $('form').css('display', 'none')
+            form.reset()
+        }
+        //多选
+      $("table").on("click", 'input[name="check"]', function () {
+        var n = 0;
+        $("tr input[name='check']:gt(0)").each(function () {
+          if ($(this).prop("checked") == false) {
+            n++;
+          }
+        });
+        if (n == 0) {
+          $("#check").prop("checked", true);
+        } else {
+          $("#check").prop("checked", false);
+        }
+      });
+      $("#check").click(function () {
+        $("tr input[name='check']").each(function () {
+          $(this).prop("checked", $("#check").prop("checked"));
+        });
+      });
+        //添加
+        function btn() {
+            $('form').css('display', 'block')
+            addORupdate = 1;
+            console.log(666);
+            $('#save-btn').css('display','block')
+            $("#xiu").css('display','none')
+        }
+        let form = document.querySelector('form')
+        function queding() {
+            event.preventDefault()
+            $("tbody tr:gt(0)").remove()
+            let name = $("#name").val();
+          let test = $("#test").val();
+          let write = $("#write").val();
+          let test1 = $("#test1").val();
+          let aver = $("#aver").val();
+          let test2 = $("#test2").val();
+          let write1 = $("#write1").val();
+          let test3 = $("#test3").val();
+          let aver1 = $("#aver1").val();
+          let zAver = $("#zAver").val();
+
+          var obj = {
+            name: name,
+            test: test,
+            write: write,
+            test1: test1,
+            aver: aver,
+            test2: test2,
+            write1: write1,
+            test3: test3,
+            aver1: aver1,
+            zAver: zAver,
+            }
+            $('form').css('display', 'none')
+            arr.push(obj)
+            showList()
+            form.reset()
+        }
+        //渲染
+        function showList() {
+            let html = "";
+            arr.forEach((item, index) => {
+                html += `<tr>
+                    <td><input type="checkbox" name="check" id="check"></td>
+                    <td>${item.name}</td>
+            <td>${item.test}</td>
+            <td>${item.write}</td>
+            <td>${item.test1}</td>
+            <td>${item.aver}</td>
+            <td>${item.test2}</td>
+            <td>${item.write1}</td>
+            <td>${item.test3}</td>
+            <td>${item.aver1}</td>
+            <td>${item.zAver}</td>
+                 <td>
+                    <button id="remo">删除</button>
+                    <button  onclick="edit(${index})" id="bianji"data-index="${index}">编辑</button>
+                    <button onclick='look()' data-index="${index}">查看成绩图表</button>
+                </td>
+                         </tr>`;
+            });
+            $("tbody").html(html);
+        }
+        //搜索
+        function souBtn() {
+            var suoText = $('#suo').val()
+            var souArr = []
+            souArr = arr.filter((item, index) => {
+                return item.name.includes(suoText)
+            })
+            var htmlSou = '';
+            souArr.forEach((item, index) => {
+                htmlSou += `<tr>
+                    <td>${item.name}</td>
+            <td>${item.test}</td>
+            <td>${item.write}</td>
+            <td>${item.test1}</td>
+            <td>${item.test2}</td>
+            <td>${item.write1}</td>
+            <td>${item.test3}</td>
+                <td><button id="remo">删除</button>
+                    <button id="bianji">编辑</button>
+                <button  id="kantu">查看成绩图表</button></td>
+                </tr>`
+            })
+            $('tbody').html(htmlSou)
+        }
+
+        const student = [
+            {
+                name: "陈静",
+                result: [
+                    {
+                        date: "2023-3-31",
+                        subject: [
+                            {
+                                name: "机试",
+                                score: 60,
+                            },
+                            {
+                                name: "笔试",
+                                score: 0,
+                            },
+                        ],
+                    },
+                    {
+                        date: "2023-4-4",
+                        subject: [
+                            {
+                                name: "机试",
+                                score: 35,
+                            },
+                            {
+                                name: "笔试",
+                                score: 85,
+                            },
+                        ],
+                    },
+                    {
+                        date: "2023-4-11",
+                        subject: [
+                            {
+                                name: "机试",
+                                score: 65,
+                            },
+                            {
+                                name: "笔试",
+                                score: 0,
+                            },
+                        ],
+                    },
+                    {
+                        date: "2023-4-18",
+                        subject: [
+                            {
+                                name: "机试",
+                                score: 75,
+                            },
+                            {
+                                name: "笔试",
+                                score: 65,
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                name: "李泽",
+                result: [
+                    {
+                        date: "2023-3-31",
+                        subject: [
+                            {
+                                name: "机试",
+                                score: 99,
+                            },
+                            {
+                                name: "笔试",
+                                score: 0,
+                            },
+                        ],
+                    },
+                    {
+                        date: "2023-4-4",
+                        subject: [
+                            {
+                                name: "机试",
+                                score: 100,
+                            },
+                            {
+                                name: "笔试",
+                                score: 38,
+                            },
+                        ],
+                    },
+                    {
+                        date: "2023-4-11",
+                        subject: [
+                            {
+                                name: "机试",
+                                score: 70,
+                            },
+                            {
+                                name: "笔试",
+                                score: 0,
+                            },
+                        ],
+                    },
+                    {
+                        date: "2023-4-18",
+                        subject: [
+                            {
+                                name: "机试",
+                                score: 92,
+                            },
+                            {
+                                name: "笔试",
+                                score: 50,
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                name: "赵灿龙",
+                result: [
+                    {
+                        date: "2023-3-31",
+                        subject: [
+                            {
+                                name: "机试",
+                                score: 90,
+                            },
+                            {
+                                name: "笔试",
+                                score: 0,
+                            },
+                        ],
+                    },
+                    {
+                        date: "2023-4-4",
+                        subject: [
+                            {
+                                name: "机试",
+                                score: 51,
+                            },
+                            {
+                                name: "笔试",
+                                score: 70,
+                            },
+                        ],
+                    },
+                    {
+                        date: "2023-4-11",
+                        subject: [
+                            {
+                                name: "机试",
+                                score: 65,
+                            },
+                            {
+                                name: "笔试",
+                                score: 0,
+                            },
+                        ],
+                    },
+                    {
+                        date: "2023-4-18",
+                        subject: [
+                            {
+                                name: "机试",
+                                score: 29,
+                            },
+                            {
+                                name: "笔试",
+                                score: 50,
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                name: "刘佳佳",
+                result: [
+                    {
+                        date: "2023-3-31",
+                        subject: [
+                            {
+                                name: "机试",
+                                score: 75,
+                            },
+                            {
+                                name: "笔试",
+                                score: 0,
+                            },
+                        ],
+                    },
+                    {
+                        date: "2023-4-4",
+                        subject: [
+                            {
+                                name: "机试",
+                                score: 45,
+                            },
+                            {
+                                name: "笔试",
+                                score: 70,
+                            },
+                        ],
+                    },
+                    {
+                        date: "2023-4-11",
+                        subject: [
+                            {
+                                name: "机试",
+                                score: 70,
+                            },
+                            {
+                                name: "笔试",
+                                score: 0,
+                            },
+                        ],
+                    },
+                    {
+                        date: "2023-4-18",
+                        subject: [
+                            {
+                                name: "机试",
+                                score: 60,
+                            },
+                            {
+                                name: "笔试",
+                                score: 50,
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                name: "齐博超",
+                result: [
+                    {
+                        date: "2023-3-31",
+                        subject: [
+                            {
+                                name: "机试",
+                                score: 95,
+                            },
+                            {
+                                name: "笔试",
+                                score: 0,
+                            },
+                        ],
+                    },
+                    {
+                        date: "2023-4-4",
+                        subject: [
+                            {
+                                name: "机试",
+                                score: 65,
+                            },
+                            {
+                                name: "笔试",
+                                score: 75,
+                            },
+                        ],
+                    },
+                    {
+                        date: "2023-4-11",
+                        subject: [
+                            {
+                                name: "机试",
+                                score: 75,
+                            },
+                            {
+                                name: "笔试",
+                                score: 0,
+                            },
+                        ],
+                    },
+                    {
+                        date: "2023-4-18",
+                        subject: [
+                            {
+                                name: "机试",
+                                score: 36,
+                            },
+                            {
+                                name: "笔试",
+                                score: 95,
+                            },
+                        ],
+                    },
+                ],
+            },
+        ];
+        function getScore(studentIndex) {
+            let jishiD = [],
+                bishiD = [];
+            var res2 = student[studentIndex].result.map((item, index) => {
+                return item.subject.filter((item, index) => {
+                    if (item.name == "机试") {
+                        jishiD.push(item.score)
+                        return jishiD
+                    } else if (item.name == "笔试") {
+                        bishiD.push(item.score)
+                        return bishiD
+                    }
+                })
+            })
+            return [
+                {
+                    label: {
+                        show: true,
+                        position: "top",
+                    },
+                    data: jishiD,
+                    name: "机试",
+                    type: "bar",
+                },
+                {
+                    label: {
+                        show: true,
+                        position: "top",
+                    },
+                    data: bishiD,
+                    name: "笔试",
+                    type: "bar",
+                },
+            ];
+        }
+        $(function () {
+            fun();
+        })
+        var studentIndex = 0
+        function getXdata(studentIndex) {
+            let res = student[studentIndex].result.map((item, index) => {
+                return item.date;
+            });
+            console.log(res);
+            return res;
+        }
+        function fun() {
+            echarts.init(document.getElementById('main')).dispose()
+            var myBar = echarts.init(document.getElementById('main'));
+            var barOption = {
+                title: {
+                    text: `${student[studentIndex].name}的成绩`,
+                },
+                legend: {
+                    data: ["机试", "笔试"]
+                },
+                tooltip: {
+                    trigger: "axis",
+                    axisPointer: {
+                        type: "shadow",
+                    },
+                    formatter: function (params) {
+                        let jishi = params[0];
+                        let bishi = params[1];
+                        return "成绩详细:" + "<br/>" + jishi.seriesName + ":" + jishi.value +
+                            "<br/>" + bishi.seriesName + ":" + bishi.value;
+                    },
+                },
+                xAxis: {
+                    type: 'category',
+                    data: getXdata(studentIndex),
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: getScore(studentIndex),
+            }
+
+            myBar.setOption(barOption);
+        }
+        function guan() {
+        $("#Look").css("display", "none");
+      }
+    </script>
+</body>
+
+</html>
