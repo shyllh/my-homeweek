@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Swiper的切换</title>
+    <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css">    
+    <script src="https://unpkg.com/swiper@8/swiper-bundle.js"> </script> 
+    <style>
+        img{
+            width: 500px;
+            height: 300px;
+        }
+        #certify{
+            margin: auto;
+            width: 500px;
+            height: 300px;
+        }
+		#swiper-container{
+			margin: auto;
+            width: 500px;
+            height: 300px;
+		}
+		#swiper-wrapper{
+			margin: auto;
+            width: 500px;
+            height: 300px;
+		}
+		html{
+			width: 100%;
+			height: 100%;
+		}
+		.swiper-button-prev{
+        position: absolute;
+        top:180px;
+        left:300px
+      }
+      .swiper-button-next{
+        position: absolute;
+        top:180px;
+        right:300px
+      }
+    </style>
+</head>
+<body>
+<div id="certify">
+<div class="swiper-container">
+<div class="swiper-wrapper">
+<div class="swiper-slide"><img src="https://p1.itc.cn/images01/20201205/5d5fd87a72a54a1298d0c97a53e16925.jpeg" /><p></p></div>
+<div class="swiper-slide"><img src="https://imgres.crsky.com/crsky/65/321581-2021070313080560dff0b50a8ad.jpg" /><p></p></div>
+<div class="swiper-slide"><img src="https://www.qpb2b.com/d/file/bigpic/2020-11-30/10/1001211550.jpg" /><p></p></div>
+<div class="swiper-slide"><img src="https://imgres.crsky.com/crsky/56/279161-20210302170209603dff11b7b64.jpg" /><p></p></div>
+<div class="swiper-slide"><img src="https://img.clinicmed.net/uploadimg/image/20200922/20200922203205_74715.jpg" /><p></p></div>
+</div>
+</div>
+<div class="swiper-pagination"></div>
+<div class="swiper-button-prev"></div>
+<div class="swiper-button-next"></div>
+</div>
+
+<script>
+certifySwiper = new Swiper('#certify .swiper-container', {
+	watchSlidesProgress: true,
+	slidesPerView: 'auto',
+	centeredSlides: true,
+	loop: true,
+	loopedSlides: 5,
+	autoplay: true,
+	navigation: {
+		nextEl: '.swiper-button-next',
+		prevEl: '.swiper-button-prev',
+	},
+	pagination: {
+		el: '.swiper-pagination',
+		//clickable :true,
+	},
+	on: {
+		progress: function(progress) {
+			for (i = 0; i < this.slides.length; i++) {
+				var slide = this.slides.eq(i);
+				var slideProgress = this.slides[i].progress;
+				modify = 1;
+				if (Math.abs(slideProgress) > 1) {
+					modify = (Math.abs(slideProgress) - 1) * 0.3 + 1;
+				}
+				translate = slideProgress * modify * 260 + 'px';
+				scale = 1 - Math.abs(slideProgress) / 5;
+				zIndex = 999 - Math.abs(Math.round(10 * slideProgress));
+				slide.transform('translateX(' + translate + ') scale(' + scale + ')');
+				slide.css('zIndex', zIndex);
+				slide.css('opacity', 1);
+				if (Math.abs(slideProgress) > 3) {
+					slide.css('opacity', 0);
+				}
+			}
+		},
+		setTransition: function(transition) {
+			for (var i = 0; i < this.slides.length; i++) {
+				var slide = this.slides.eq(i)
+				slide.transition(transition);
+			}
+
+		}
+	}
+
+})
+
+</script>
+</body>
+</html>
