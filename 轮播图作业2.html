@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>carousel模块快速使用</title>
+  <link rel="stylesheet"  href="https://unpkg.com/layui@2.6.8/dist/css/layui.css" />
+<!-- 引入 layui.js -->
+<script src="https://unpkg.com/layui@2.6.8/dist/layui.js"></script>
+</head>
+<style>
+    .layui-carousel{
+        width: 100%;
+        height: 100%;
+    }
+    img{
+        width: 100%;
+        height: 100%;
+    }
+</style>
+<body>
+ 
+<div class="layui-carousel" id="test1">
+  <div carousel-item>
+    <div><img src="https://file.moyublog.com/d/file/2020-11-25/0f040f0bcaf17fbb77f3f59794ea32d4.jpg"/></div>
+    <div><img src="https://file.moyublog.com/d/file/2020-11-16/86beeb137cfd590c1aebdb3236e80468.jpg" /></div>
+    <div><img src="https://file.moyublog.com/d/file/2020-11-17/8ecc1f20555bc8ba115d23f6d8d60d6c.jpg" /></div>
+    <div><img src="https://up.zhuoku.org/pic_source/9a/78/0b/9a780bb7b7d3267a829f84d602f02068.jpg" /></div>
+    <div><img src="https://i0.hdslb.com/bfs/article/d0a20a26a7c409b3e940416c91d3045cd028d729.jpg" /></div>
+  </div>
+</div>
+<!-- 条目中可以是任意内容，如：<img src=""> -->
+<script>
+layui.use('carousel', function(){
+  var carousel = layui.carousel;
+  //建造实例
+  carousel.render({
+    elem: '#test1'
+    ,width: '100%' //设置容器宽度
+    ,arrow: 'always' //始终显示箭头
+    //,anim: 'updown' //切换动画方式
+  });
+});
+</script>
+</body>
+</html>
